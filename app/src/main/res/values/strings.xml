@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Ble_4.0</string>
+
+    <string name="bluetooth">蓝牙</string>
+    <string name="deveice_name">现在可被发现为“$1”</string>
+    <string name="my_deveice_name">我的设备</string>
 </resources>
