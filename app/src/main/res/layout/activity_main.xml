@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/back_color"
     tools:context=".MainActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/layout_switch"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,29 +31,61 @@
                 android:textSize="18sp"/>
 
             <ImageView
+                android:id="@+id/iv_switch"
                 android:layout_width="60dp"
                 android:layout_height="30dp"
                 android:src="@mipmap/turn_off"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY"
+                android:contentDescription="@string/todo" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/my_deveice_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:textColor="@color/gray_text"
-            android:text="@string/deveice_name"/>
+            android:text="@string/my_deveice_name"
+            android:textSize="15sp"/>
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/layout_on_off"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:textColor="@color/gray_text"
-            android:text="@string/my_deveice_name"/>
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/gray_text"
+                android:text="@string/my_deveices"
+                android:textSize="15sp"/>
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/bonded_recyc"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    </ScrollView>
-</LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/gray_text"
+                android:text="@string/another_deveices"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/search_recyc"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
