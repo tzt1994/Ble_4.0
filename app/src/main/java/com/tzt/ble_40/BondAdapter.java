@@ -1,20 +1,23 @@
 package com.tzt.ble_40;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class BondAdapter extends RecyclerView.Adapter<BondAdapter.ViewHolder> {
     private ArrayList<BluetoothDevice> devicesList;
     private OnClickConnectListener connectListener;
+    private Context mContext;
 
-    public BondAdapter(ArrayList<BluetoothDevice> list){
+    BondAdapter(ArrayList<BluetoothDevice> list){
         devicesList = list;
     }
 
@@ -23,12 +26,13 @@ public class BondAdapter extends RecyclerView.Adapter<BondAdapter.ViewHolder> {
     }
 
     public interface OnClickConnectListener{
-        void onClickConnect(int position, BluetoothDevice device);
+        void onBondClickConnect(BluetoothDevice device, int position);
     }
 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mContext = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bond_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
 
@@ -38,8 +42,8 @@ public class BondAdapter extends RecyclerView.Adapter<BondAdapter.ViewHolder> {
                 //点击进行连接
                 int position = holder.getAdapterPosition();
                 BluetoothDevice device = devicesList.get(position);
-                if (device.getBondState() == BluetoothDevice.BOND_NONE)
-                connectListener.onClickConnect(position, device);
+                holder.bond_state.setText("正在连接");
+                connectListener.onBondClickConnect(device, position);
             }
         });
 
@@ -61,13 +65,10 @@ public class BondAdapter extends RecyclerView.Adapter<BondAdapter.ViewHolder> {
         }else {
             holder.bond_info.setText(device.getAddress());
         }
-
-        if (device.getBondState() == BluetoothDevice.BOND_NONE){
-            holder.bond_state.setText("未连接");
-        }else if (device.getBondState() == BluetoothDevice.BOND_BONDING){
-            holder.bond_state.setText("正在连接");
-        }else if (device.getBondState() == BluetoothDevice.BOND_BONDED){
+        if (BleUtils.getBleDeviceGattConnect(mContext, device)){
             holder.bond_state.setText("已连接");
+        } else{
+            holder.bond_state.setText("未连接");
         }
     }
 
@@ -81,7 +82,7 @@ public class BondAdapter extends RecyclerView.Adapter<BondAdapter.ViewHolder> {
         private TextView bond_state;
         private ImageView bond_unbond;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             bond_info = itemView.findViewById(R.id.bond_info);
             bond_state = itemView.findViewById(R.id.bond_state);
