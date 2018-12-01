@@ -9,11 +9,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SearchAdapter searchAdapter;
 
     private BluetoothAdapter bluetoothAdapter;
+    private BluetoothGatt mGatt;
     private String my_deveice_name_text;
     private boolean mBondSearch = false;
     private int mPosition;
@@ -228,21 +231,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {         //设备连接状态发生变化
-            if (status == BluetoothProfile.STATE_CONNECTED){                                        //已连接
-                if (mBondSearch){
-                    bondAdapter.notifyItemChanged(mPosition);
+            ToashShow("进来了");
+            if (mBondSearch){
+                bondAdapter.notifyDataSetChanged();
+            }else {
+                searchAdapter.notifyDataSetChanged();
+            }
+
+            if (status == BluetoothGatt.GATT_SUCCESS){
+                ToashShow("gatt success");
+                if (newState == BluetoothProfile.STATE_CONNECTED){                                        //已连接
+
+                }else if (newState == BluetoothProfile.STATE_DISCONNECTED){                               //断开连接
+
                 }
-            }else if (status == BluetoothProfile.STATE_DISCONNECTED){                               //断开连接
-                if (mBondSearch){
-                    bondAdapter.notifyItemChanged(mPosition);
-                }
+            }else {
+                ToashShow("133--" + status);
             }
         }
     };
 
     public void gattConnect(BluetoothDevice device){
         stopSearchDevices();
-        device.connectGatt(this, true, gattCallback);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ToashShow("大于M");
+            mGatt = device.connectGatt(this, false, gattCallback,BluetoothDevice.TRANSPORT_LE);
+        }else {
+            mGatt = device.connectGatt(this,false,gattCallback);
+        }
     }
 
     public void ToashShow(String content){
